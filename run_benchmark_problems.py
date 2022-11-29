@@ -34,7 +34,8 @@ print('parallel', parallel)
 
 # Add high accuracy solvers when accuracy
 if high_accuracy:
-    solvers = [s.MOSEK,s.qpOASES,s.GUROBI,s.quadprog,s.OSQP,s.PROXQP]
+    # solvers = [s.PROXQP]
+    solvers = [s.PROXQP_sparse, s.OSQP]
     OUTPUT_FOLDER ='benchmark_problems_high_accuracy'
     for key in s.settings:
         s.settings[key]['high_accuracy'] = True
@@ -47,11 +48,11 @@ if verbose:
         s.settings[key]['verbose'] = True
 
 # Number of instances per different dimension
-n_instances = 5
+n_instances = 1
 n_dim = 10
-n_average = 100
-sparsity = 1 # control problem sparsity
-accuracies = [1.e-3] # control accuracy asked
+n_average = 500
+sparsity = 0.15 # control problem sparsity
+accuracies = [1.e-6] # control accuracy asked
 
 # Run benchmark problems
 problems = [
@@ -61,7 +62,8 @@ problems = [
             ]
 
 problem_dimensions = {
-                      'Random Mixed QP': gen_int_log_space(10, 1000, n_dim),
+                    #   'Random Mixed QP': gen_int_log_space(10, 1000, n_dim),
+                      'Random Mixed QP': [1000],
                       'Random Degenerate QP': gen_int_log_space(10, 1000, n_dim),
                       'Random Not Strongly Convex QP': gen_int_log_space(10, 1000, n_dim)
                       }

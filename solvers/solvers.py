@@ -29,9 +29,9 @@ try:
 except ModuleNotFoundError:
   pass
 try:
-  from solvers.proxqp import PROXQPSolver
+  from solvers.proxqp import PROXQPSolver, PROXQPSolverSparse
   SOLVER_MAP[PROXQP] = PROXQPSolver
-  SOLVER_MAP[PROXQP_sparse] = PROXQPSolver
+  SOLVER_MAP[PROXQP_sparse] = PROXQPSolverSparse
 except ModuleNotFoundError:
   pass
 try:
@@ -45,6 +45,10 @@ eps_high = 1e-09
 
 # Solver settings
 settings = {
+    PROXQP_sparse: {'eps_abs': eps_high,
+              'eps_rel': 0.,
+              'verbose':False
+    },
     PROXQP: {'eps_abs': eps_high,
               'eps_rel': 0.,
               'verbose':False

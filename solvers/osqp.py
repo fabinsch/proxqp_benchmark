@@ -1,3 +1,4 @@
+import numpy as np
 import osqp
 from . import statuses as s
 from .results import Results
@@ -44,10 +45,13 @@ class OSQPSolver(object):
                 **settings)
 
         # Solve
-        run_time = 0
+        # run_time = 0
+        run_time = []
+
         for i in range(n_average-1):
             results = m.solve()
-            run_time += results.info.run_time
+            # run_time += results.info.run_time
+            run_time.append(results.info.run_time)
             # in a multiple solve with the same initial setup osqp (i) does not re-factorize the problem (it uses its last previous version)
             # and (ii) uses previous solutions from last solve
             # it corresponds to the WARM_START_WITH_PREVIOUS_SOLUTION initial guess option of ProxQP (with dense backend)
@@ -58,8 +62,11 @@ class OSQPSolver(object):
                 problem['u'],
                 **settings) 
         results = m.solve()
-        run_time += results.info.run_time
-        run_time /= n_average
+        run_time.append(results.info.run_time)
+        std = np.std(np.array(run_time))
+        run_time = np.mean(np.array(run_time))
+        # run_time += results.info.run_time
+        # run_time /= n_average
         
         status = self.STATUS_MAP.get(results.info.status_val, s.SOLVER_ERROR)
 
@@ -89,4 +96,4 @@ class OSQPSolver(object):
         return_results.update_time = results.info.update_time
         return_results.rho_updates = results.info.rho_updates
 
-        return return_results
+        return return_results, std

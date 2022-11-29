@@ -197,7 +197,7 @@ class Example(object):
 
         # Solve problem
         s = SOLVER_MAP[solver](settings)
-        results = s.solve(example_instance,self.n_average,eps)
+        results, std = s.solve(example_instance,self.n_average,eps)
 
         # Create solution as pandas table
         P = example_instance.qp_problem['P']
@@ -207,6 +207,7 @@ class Example(object):
                          'solver': [solver],
                          'status': [results.status],
                          'run_time': [results.run_time],
+                         'std': [std],
                          'iter': [results.niter],
                          'obj_val': [results.obj_val],
                          'n': [dimension],
